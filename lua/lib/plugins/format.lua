@@ -26,7 +26,7 @@ return { -- Autoformat
         lsp_format_opt = 'fallback'
       end
       return {
-        timeout_ms = 500,
+        timeout_ms = 1000,
         lsp_format = lsp_format_opt,
       }
     end,
@@ -37,9 +37,9 @@ return { -- Autoformat
       cs = { 'clang_format' },
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
-      javascript = { 'prettierd', 'prettier', stop_after_first = true },
-      typescript = { 'prettierd', 'prettier', stop_after_first = true },
-      typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+      javascript = { 'prettier', stop_after_first = true },
+      typescript = { 'prettier', stop_after_first = true },
+      typescriptreact = { 'prettier', stop_after_first = true },
     },
   },
 }
