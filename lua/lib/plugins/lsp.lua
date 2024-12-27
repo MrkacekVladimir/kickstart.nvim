@@ -127,6 +127,7 @@ return {
           },
         },
       },
+      gopls = {},
       ts_ls = {},
       html = {},
       cssls = {},
