@@ -33,7 +33,7 @@ return {
       'xml',
       'yaml',
     },
-    indent = { enable = true },
+    indent = { enable = false },
     highlight = {
       enable = true,
       disable = { 'latex' },
