@@ -6,8 +6,14 @@ vim.g.editorconfig = true
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
-vim.opt.shell = 'powershell.exe'
-vim.opt.shellcmdflag = '-NoLogo -ExecutionPolicy RemoteSigned'
+local current_os = vim.loop.os_uname().sysname
+if current_os == 'Windows_NT' then
+  vim.opt.shell = 'powershell.exe'
+  vim.opt.shellcmdflag = '-NoLogo -ExecutionPolicy RemoteSigned'
+else
+  vim.opt.shell = '/bin/bash'
+  vim.opt.shellcmdflag = '-c'
+end
 
 -- Make tabs
 vim.opt.shiftwidth = 4
