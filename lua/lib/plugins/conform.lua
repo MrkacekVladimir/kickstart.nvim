@@ -6,7 +6,7 @@ return {
     {
       '<leader>f',
       function()
-        require('conform').format { async = true, lsp_format = 'never' }
+        require('conform').format { async = true, timeout_ms = 1000, lsp_format = 'never' }
       end,
       mode = '',
       desc = '[F]ormat buffer',
@@ -24,6 +24,8 @@ return {
       cs = { 'csharpier' },
       lua = { 'stylua' },
       python = { 'isort', 'black' },
+      html = { 'prettierd', 'prettier', stop_after_first = true },
+      css = { 'prettierd', 'prettier', stop_after_first = true },
       javascript = { 'prettierd', 'prettier', stop_after_first = true },
       typescript = { 'prettierd', 'prettier', stop_after_first = true },
       typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },

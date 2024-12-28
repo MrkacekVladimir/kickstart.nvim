@@ -1,5 +1,2 @@
-require 'lib.config.options'
-require 'lib.config.keymaps'
-require 'lib.config.autocmds'
-require 'lib.config.lazy'
-require 'lib.config.health'
+require 'lib.config'
+require 'lib.lazy'

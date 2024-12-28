@@ -1,5 +1,4 @@
 return {
-
   {
     'nvimtools/none-ls.nvim',
     optional = true,
@@ -12,7 +11,7 @@ return {
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      { 'williamboman/mason.nvim', config = true, opts = { 'csharpier', 'netcoredbg' } },
+      { 'williamboman/mason.nvim', config = true },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       { 'j-hui/fidget.nvim', opts = {} },
@@ -21,7 +20,7 @@ return {
     },
     config = function()
       vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
+        group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
         callback = function(event)
           local map = function(keys, func, desc, mode)
             mode = mode or 'n'
@@ -49,7 +48,7 @@ return {
           end
 
           if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-            local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+            local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
               group = highlight_augroup,
@@ -63,10 +62,10 @@ return {
             })
 
             vim.api.nvim_create_autocmd('LspDetach', {
-              group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+              group = vim.api.nvim_create_augroup('detach', { clear = true }),
               callback = function(event2)
                 vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+                vim.api.nvim_clear_autocmds { group = 'lsp-highlight', buffer = event2.buf }
               end,
             })
           end
@@ -83,8 +82,9 @@ return {
         end,
       })
 
+      local cmp_nvim_lsp = require 'cmp_nvim_lsp'
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+      capabilities = vim.tbl_deep_extend('force', capabilities, cmp_nvim_lsp.default_capabilities())
 
       local servers = {
         pylsp = {
@@ -101,39 +101,18 @@ return {
         omnisharp = {
           settings = {
             FormattingOptions = {
-              -- Enables support for reading code style, naming convention and analyzer
-              -- settings from .editorconfig.
               EnableEditorConfigSupport = true,
-              -- Specifies whether 'using' directives should be grouped and sorted during
-              -- document formatting.
               OrganizeImports = nil,
             },
             MsBuild = {
-              -- If true, MSBuild project system will only load projects for files that
-              -- were opened in the editor. This setting is useful for big C# codebases
-              -- and allows for faster initialization of code navigation features only
-              -- for projects that are relevant to code that is being edited. With this
-              -- setting enabled OmniSharp may load fewer projects and may thus display
-              -- incomplete reference lists for symbols.
               LoadProjectsOnDemand = nil,
             },
             RoslynExtensionsOptions = {
-              -- Enables support for roslyn analyzers, code fixes and rulesets.
               EnableAnalyzersSupport = nil,
-              -- Enables support for showing unimported types and unimported extension
-              -- methods in completion lists. When committed, the appropriate using
-              -- directive will be added at the top of the current file. This option can
-              -- have a negative impact on initial completion responsiveness,
-              -- particularly for the first few completion sessions after opening a
-              -- solution.
               EnableImportCompletion = nil,
-              -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
-              -- true
               AnalyzeOpenDocumentsOnly = nil,
             },
             Sdk = {
-              -- Specifies whether to include preview versions of the .NET SDK when
-              -- determining which version to use for project loading.
               IncludePrereleases = true,
             },
           },
@@ -142,11 +121,6 @@ return {
         ts_ls = {},
         html = {},
         cssls = {},
-        stylua = {
-          settings = {
-            call_parantheses = 'Always',
-          },
-        },
         lua_ls = {
           settings = {
             Lua = {
@@ -164,14 +138,21 @@ return {
 
       require('mason').setup {}
 
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        'stylua',
-      })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      require('mason-tool-installer').setup {
+        ensure_installed = {
+          'eslint_d',
+          'prettierd',
+          'prettier',
+          'csharpier',
+          'stylua',
+          'isort',
+          'black',
+        },
+      }
 
+      local ensure_installed = vim.tbl_keys(servers or {})
       require('mason-lspconfig').setup {
-        ensure_installed = {},
+        ensure_installed = ensure_installed,
         automatic_installation = false,
         handlers = {
           function(server_name)
