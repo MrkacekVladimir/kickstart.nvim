@@ -18,3 +18,12 @@ vim.api.nvim_create_autocmd({ 'VimResized' }, {
     vim.cmd('tabnext ' .. current_tab)
   end,
 })
+
+-- hide numbers when working with :term
+vim.api.nvim_create_autocmd('TermOpen', {
+  group = vim.api.nvim_create_augroup('custom-term-open', { clear = true }),
+  callback = function()
+    vim.opt.number = false
+    vim.opt.relativenumber = false
+  end,
+})

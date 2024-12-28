@@ -58,7 +58,7 @@ return {
         ['<C-y>'] = cmp.mapping.confirm { select = true },
         ['<Tab>'] = cmp.mapping.confirm { select = true },
 
-        ['<C-Space>'] = cmp.mapping.complete {},
+        ['<C-Space>'] = cmp.mapping.complete(),
 
         -- Think of <c-l> as moving to the right of your snippet expansion.
         --  So if you have a snippet that's like:

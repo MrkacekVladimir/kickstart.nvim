@@ -4,14 +4,17 @@ vim.g.maplocalleader = ' '
 vim.g.editorconfig = true
 vim.g.have_nerd_font = true
 
-local opt = vim.opt
-
 local current_os = vim.loop.os_uname().sysname
 if current_os == 'Windows_NT' then
-  opt.shell = 'powershell.exe'
-  opt.shellcmdflag = '-NoLogo -ExecutionPolicy RemoteSigned'
+  vim.o.shell = vim.fn.executable 'pwsh' == 1 and 'pwsh' or 'powershell'
+  vim.oshellcmdflag = '-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
+  vim.o.shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+  vim.o.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+  vim.o.shellquote = ''
+  vim.o.shellxquote = ''
 end
 
+local opt = vim.opt
 opt.autowrite = true -- Enable auto write
 opt.clipboard = vim.env.SSH_TTY and '' or 'unnamedplus' -- Sync with system clipboard
 opt.completeopt = 'menu,menuone,noselect'
