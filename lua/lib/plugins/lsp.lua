@@ -140,6 +140,8 @@ return {
 
       require('mason-tool-installer').setup {
         ensure_installed = {
+          'markdownlint',
+          'jsonlint',
           'eslint_d',
           'prettierd',
           'prettier',
